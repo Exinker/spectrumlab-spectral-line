@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spectrumlab-line-shape"
+version = "0.1.4"
+authors = [
+    {name = "Pavel Vaschenko", email="vaschenko@vmk.ru"},
+]
+maintainers = [
+    {name = "Pavel Vaschenko", email="vaschenko@vmk.ru"},
+]
+readme = "README.md"
+license = {text = "MIT License"}
+dependencies = [
+    "setuptools>=75.6.0",
+    "spectrumlab>=0.9.1",
+]
+requires-python = ">=3.12"
+
+[dependency-groups]
+linting = [
+    "flake8",
+    "flake8-commas",
+    "flake8-import-order",
+    "flake8-bugbear",
+    "flake8-builtins",
+    "pep8-naming",
+]
+testing = [
+    "faker>=33.3.1",
+    "pytest",
+    "pytest-cov",
+    "pytest-flake8",
+    "pytest-mock>=3.14.0",
+]
+dev = [
+    "ipykernel>=6.29.5",
+    "ipywidgets>=8.1.5",
+    "notebook>=7.3.2",
+    {include-group = "linting"},
+    {include-group = "testing"},
+]
+
+[tool.uv.sources]
+spectrumlab = { git = "https://github.com/Exinker/spectrumlab" }
+# spectrumlab = { path = "C:/Users/Exinker/Documents/spectrumlab", editable = true }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.csv", "*.md", "*.txt", "*.xml"]
