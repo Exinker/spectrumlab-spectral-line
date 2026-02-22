@@ -9,18 +9,15 @@
 
 
 ## Installation
-Для установки следует выполнить команду `pip install git+https://github.com/Exinker/spectrumlab-line-shape.git`.
+Для установки следует выполнить команду `pip install git+https://github.com/Exinker/spectrumlab-spectral-line.git`.
 
 
 ## Usage
 Пример использования приложения для расчета контура линии **Zn 328.23** нм:
 ```python
 from spectrumlab.line import Line
-from spectrumlab_line_shape.shapes.estimator import LineShapeEstimator, LineShapeEstimatorConfig
-
-
-TAU = 1e-8  # lifetime [s]
-SIGMA = 2*1e-18  # collisional cross-section [m^2]
+from spectrumlab_spectral_line.constants import SIGMA, TAU
+from spectrumlab_spectral_line.estimators import LineShapeEstimator, LineShapeEstimatorConfig
 
 
 estimator = LineShapeEstimator(
