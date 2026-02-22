@@ -10,6 +10,21 @@ from spectrumlab.grids.utils import estimate_fwhm
 from spectrumlab.types import Array, PicoMeter
 
 
+@dataclass(frozen=True)
+class GaussLineShape:
+    """Gauss (or normal) line profile's shape."""
+    width: PicoMeter
+
+    @overload
+    def __call__(self, x: PicoMeter, position: PicoMeter, intensity: float) -> Array[float]: ...
+    @overload
+    def __call__(self, x: Array[PicoMeter], position: PicoMeter, intensity: float) -> Array[float]: ...
+    def __call__(self, x, position, intensity):
+        f = intensity*gauss(x, x0=position, w=self.width)
+
+        return f
+
+
 @dataclass(frozen=True, slots=True)
 class VoigtLineShape:
     """Voigt line shape."""
@@ -69,5 +84,44 @@ class PVoigtLineShape:
     def __call__(self, x: Array[PicoMeter], position: PicoMeter, intensity: float) -> Array[float]: ...
     def __call__(self, x, position, intensity):
         f = intensity*pvoigt(x, x0=position, w=self.width, a=self.asymmetry, r=self.ratio)
+
+        return f
+
+
+@dataclass(frozen=True)
+class SelfReversedPVoigtLineShape:
+    """Self-reversed voigt line profile's shape with self-absorption"""
+    width: PicoMeter
+    asymmetry: float
+    ratio: float
+    absorbance: float
+
+    @overload
+    def __call__(self, x: PicoMeter, position: PicoMeter, intensity: float) -> Array[float]: ...
+    @overload
+    def __call__(self, x: Array[PicoMeter], position: PicoMeter, intensity: float) -> Array[float]: ...
+    def __call__(self, x, position, intensity):
+        voigt = pvoigt(x, x0=position, w=self.width, a=self.asymmetry, r=self.ratio)
+        f = intensity*voigt*10**(-self.absorbance*voigt)
+
+        return f
+
+
+@dataclass(frozen=True)
+class SigmoidsLineShape:
+    """Time distribution."""
+    width: tuple[float, float]
+    power: float
+
+    @overload
+    def __call__(self, x: PicoMeter, position: PicoMeter, intensity: float) -> Array[float]: ...
+    @overload
+    def __call__(self, x: Array[PicoMeter], position: PicoMeter, intensity: float) -> Array[float]: ...
+    def __call__(self, x, position, intensity):
+        w = self.width
+        p = self.power
+
+        sigmoid = lambda x: ((4/np.pi) * (np.arctan(-w[0]*(x - position)) + np.pi/2) * (1/(1 + np.exp(-w[1]*(x - position)))))**p  # noqa: E501, E731
+        f = intensity*sigmoid(x)/integrate.quad(sigmoid, a=position-1e+3, b=position+1e+3)[0]
 
         return f

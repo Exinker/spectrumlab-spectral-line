@@ -7,13 +7,13 @@ import numpy as np
 from spectrumlab.picture.colors import COLOR
 from spectrumlab.types import Array, PicoMeter
 
-from spectrumlab_line_shape.shapes import LineShape
+from spectrumlab_spectral_line.shapes import LineShape
 
 
 @dataclass(frozen=True)
-class Line:
+class SpectralLine:
     """
-    Interface for any line's shape.
+    Interface for any physical line's shape.
 
     Author: Vaschenko Pavel
      Email: vaschenko@vmk.ru
@@ -51,9 +51,9 @@ class Line:
 
 
 if __name__ == '__main__':
-    from spectrumlab_line_shape.shapes import PVoigtLineShape
+    from spectrumlab_spectral_line.shapes import PVoigtLineShape
 
-    line = Line(
+    line = SpectralLine(
         shape=PVoigtLineShape(width=25, asymmetry=0, ratio=.1),
     )
     line.show(position=0, intensity=1)

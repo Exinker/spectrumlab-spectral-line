@@ -7,13 +7,13 @@ from spectrumlab.lines.utils import (
     calculate_width_doppler,
     calculate_width_natural,
 )
-from spectrumlab.types import Kelvin, Meter, Second, Symbol
+from spectrumlab.types import Kelvin, Meter, PicoMeter, Second, Symbol
 
-from spectrumlab_line_shape.shapes.shapes import (
+from spectrumlab_spectral_line.shapes import (
     PVoigtLineShape,
     VoigtLineShape,
 )
-from spectrumlab_line_shape.utils import transform
+from spectrumlab_spectral_line.utils import transform
 
 
 PERIODIC_TABLE = PeriodicTable()
@@ -40,6 +40,8 @@ class LineShapeEstimator:
     def fit(
         self,
         line: Line,
+        dx: PicoMeter = 1e-1,
+        rx: PicoMeter = 10,
         verbose: bool = False,
         show: bool = False,
         save: bool = False,
@@ -77,6 +79,8 @@ class LineShapeEstimator:
 
         return transform(
             line=line,
+            dx=dx,
+            rx=rx,
             shape=shape,
             show=show,
             save=save,

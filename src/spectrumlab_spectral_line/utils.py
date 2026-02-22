@@ -7,7 +7,7 @@ from spectrumlab.curves import voigt2pvoigt
 from spectrumlab.lines import Line
 from spectrumlab.types import PicoMeter
 
-from spectrumlab_line_shape.shapes.shapes import PVoigtLineShape, VoigtLineShape
+from spectrumlab_spectral_line.shapes.shapes import PVoigtLineShape, VoigtLineShape
 
 
 def transform(
