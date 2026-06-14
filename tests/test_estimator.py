@@ -11,16 +11,8 @@ from spectrumlab_spectral_line.estimators import LineShapeEstimator, LineShapeEs
 @pytest.mark.parametrize(
     ['config', 'line', 'expected'],
     [
-        (
-            LineShapeEstimatorConfig(temperature=800, buffer='Ne', tau=TAU, sigma=SIGMA),
-            Line('Zn', 328.23),
-            2.4810,
-        ),
-        (
-            LineShapeEstimatorConfig(temperature=2400 + 273.15, buffer='Ar', tau=TAU, sigma=SIGMA),
-            Line('Ag', 338.289),
-            1.7709,
-        ),
+        (LineShapeEstimatorConfig(temperature=800, buffer='Ne', tau=TAU, sigma=SIGMA), Line('Zn', 328.23), 2.4810),
+        (LineShapeEstimatorConfig(temperature=2400 + 273.15, buffer='Ar', tau=TAU, sigma=SIGMA), Line('Ag', 338.289), 1.7709),
     ],
 )
 def test_estimated_pvoight_line_shape_fwhm(
@@ -28,7 +20,6 @@ def test_estimated_pvoight_line_shape_fwhm(
     line: Line,
     expected: PicoMeter,
 ):
-    tollerance = 1e-3
 
     estimator = LineShapeEstimator(
         config=config,
@@ -37,4 +28,4 @@ def test_estimated_pvoight_line_shape_fwhm(
         line=line,
     )
 
-    assert np.abs(shape.fwhm - expected) < tollerance
+    assert np.isclose(shape.fwhm, expected, atol=1e-3)
